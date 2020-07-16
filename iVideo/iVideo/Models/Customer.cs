@@ -21,5 +21,7 @@ namespace iVideo.Models
         [Display(Name = "Membership Type")]
         public byte MembershipTypeId { get; set; }
 
+        [Min18YearsIfAMember]
+        public DateTime? Birthdate { get; set; }
     }
 }
