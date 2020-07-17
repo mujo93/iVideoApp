@@ -1,9 +1,9 @@
 ﻿using AutoMapper;
 using iVideo.Dtos;
 using iVideo.Models;
+using System.Data.Entity;
 using System;
 using System.Linq;
-using System.Web.Mvc;
 using System.Web.Http;
 namespace iVideo.Controllers.Api
 {
@@ -15,13 +15,16 @@ namespace iVideo.Controllers.Api
             _context = new ApplicationDbContext();
         }
 
-        [System.Web.Http.HttpGet]
+        [HttpGet]
         public IHttpActionResult GetMovies()
         {
-            return Ok(_context.Movies.ToList().Select(Mapper.Map<Movie, MovieDto>));
+            return Ok(_context.Movies.
+                Include(m=>m.Genre).
+                ToList().
+                Select(Mapper.Map<Movie, MovieDto>));
         }
 
-        [System.Web.Http.HttpGet]
+        [HttpGet]
         public IHttpActionResult GetMovie(int id)
         {
             var movie = _context.Movies.SingleOrDefault(m => m.Id == id);
@@ -32,7 +35,7 @@ namespace iVideo.Controllers.Api
             return Ok(movieDto);
         }
 
-        [System.Web.Http.HttpPost]
+        [HttpPost]
         public IHttpActionResult CreateMovie(MovieDto movieDto)
         {
             var movie = Mapper.Map<MovieDto, Movie>(movieDto);
@@ -44,7 +47,7 @@ namespace iVideo.Controllers.Api
 
         }
 
-        [System.Web.Http.HttpPut]
+        [HttpPut]
         public IHttpActionResult UpdateMovie(int id, MovieDto movieDto)
         {
             var movieInDb = _context.Movies.SingleOrDefault(m => m.Id == id);
@@ -57,6 +60,8 @@ namespace iVideo.Controllers.Api
             return Ok(movieDto);
         }
 
+        
+        [HttpDelete]
         public IHttpActionResult DeleteMovie(int id)
         {
             var movieInDb = _context.Movies.SingleOrDefault(m => m.Id == id);
