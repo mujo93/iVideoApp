@@ -10,6 +10,7 @@ using System.Web.Mvc;
 
 namespace iVideo.Controllers
 {
+    [Authorize(Roles =RoleName.CanManageMovies)]
     public class MoviesController : Controller
     {
         // GET: Movies
@@ -19,6 +20,7 @@ namespace iVideo.Controllers
         {
             _context = new ApplicationDbContext();
         }
+        [AllowAnonymous]
         public ActionResult Index()
         {
             if(User.IsInRole("CanManageMovies"))
@@ -26,14 +28,13 @@ namespace iVideo.Controllers
             return View("ReadOnlyList");
         }
 
+        [AllowAnonymous]
         public ActionResult Details(int id)
         {
             var movie = _context.Movies.Include(m => m.Genre).SingleOrDefault(m => m.Id == id);
             return View(movie);
 
         }
-
-        [Authorize(Roles = RoleName.CanManageMovies)]
         public ActionResult New()
         {
             var genres = _context.Genres.ToList();
@@ -46,6 +47,7 @@ namespace iVideo.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles =RoleName.CanManageMovies)]
         public ActionResult Save(Movie movie)
         {
             var viewModel = new NewMovieViewModel

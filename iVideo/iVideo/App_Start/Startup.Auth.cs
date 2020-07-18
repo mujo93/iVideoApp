@@ -54,9 +54,9 @@ namespace iVideo
             //   consumerKey: "",
             //   consumerSecret: "");
 
-            //app.UseFacebookAuthentication(
-            //   appId: "",
-            //   appSecret: "");
+            app.UseFacebookAuthentication(
+               appId: "2343146822654764",
+               appSecret: "f1c5ec28a25aa2608e724b6a29e5acb7");
 
             //app.UseGoogleAuthentication(new GoogleOAuth2AuthenticationOptions()
             //{
