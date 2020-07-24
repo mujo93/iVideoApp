@@ -16,12 +16,15 @@ namespace iVideo.Controllers.Api
         }
 
         [HttpGet]
-        public IHttpActionResult GetMovies()
+        public IHttpActionResult GetMovies(string query=null)
         {
-            return Ok(_context.Movies.
-                Include(m=>m.Genre).
-                ToList().
-                Select(Mapper.Map<Movie, MovieDto>));
+            var moviesQuery = _context.Movies.Include(m => m.Genre);
+            if (!string.IsNullOrWhiteSpace(query))
+                moviesQuery = moviesQuery.Where(m => m.Name.Contains(query)).
+                    Where(m => m.NumberAvailable > 0); 
+
+            var movieDtos=moviesQuery.ToList().Select(Mapper.Map<Movie, MovieDto>);
+            return Ok(movieDtos);
         }
 
         [HttpGet]
