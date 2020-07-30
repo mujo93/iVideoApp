@@ -1,0 +1,74 @@
+﻿@{
+    ViewBag.Title = "RentedMovies";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Rented Movies</h2>
+<table id="rentedMovies" class="table table-bordered table-responsive table-hover">
+    <thead>
+        <tr>
+            <th>Customer Name</th>
+            <th>Movie Name</th>
+            <th>Date Rented</th>
+            <th>Action</th>
+        </tr>
+    </thead>
+    <tbody>
+    </tbody>
+</table>
+
+
+@section scripts{
+    <script>
+        $(document).ready(function () {
+
+            var table = $("#rentedMovies").DataTable({
+
+                ajax: {
+                    url: "/api/rentals/",
+                    method:"GET",
+                    dataSrc:""
+                },
+                columns: [
+                    {
+                        data: "customer.name"
+                    },
+                    {
+                        data: "movie.name"
+                    },
+                    {
+                        data: "dateRented",
+                        render: function (data) {
+                            var date = new Date(data)
+                            return date.toDateString();
+                        }
+                    },
+                    {
+                        data: "id",
+                        render: function (data) {
+                            return `<button class="btn-link js-return" data-rental-id=${data}>Return</button>`
+                        }
+                    }
+                ]
+            });
+
+
+            $("#rentedMovies").on("click",".js-return", function () {
+                var button = $(this);
+                bootbox.confirm("Are you sure to return this movie", function (result) {
+                    if (result) {
+                        $.ajax({
+                            url: "api/rentals/"+button.attr("data-rental-id"),
+                            method:"PUT",
+                            success: function () {
+                                table.row(button.parents("tr")).remove().draw();
+                            }
+                        });
+                    }
+                })
+            })
+        })
+    </script>
+
+
+}

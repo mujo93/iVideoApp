@@ -7,6 +7,9 @@ using System.Web.Mvc;
 using System.Data.Entity;
 using iVideo.ViewModels;
 using System.Data.Entity.Infrastructure.MappingViews;
+using AutoMapper;
+using iVideo.Dtos;
+using Microsoft.AspNet.Identity;
 
 namespace iVideo.Controllers
 {

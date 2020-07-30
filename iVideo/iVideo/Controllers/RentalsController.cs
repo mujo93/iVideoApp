@@ -8,6 +8,12 @@ namespace iVideo.Controllers
 {
     public class RentalsController : Controller
     {
+
+        public ActionResult Index()
+        {
+            return View();
+        }
+
         // GET: Rentals
         public ActionResult New()
         {

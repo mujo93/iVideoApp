@@ -27,7 +27,7 @@
 </form>
 
 @section scripts{
-     @Scripts.Render("/bundles/jqueryval")
+     @Scripts.Render("/bundles/jqueryval");
     <script>
         $(document).ready(function () {
             var vm = {
@@ -73,9 +73,14 @@
                     display: 'name',
                     source: movies
                 }).on("typeahead:select", function (e, movie) {
-                    $("#movies").append("<li class='list-group-item'>" + movie.name + "</li>");
-                    $("#movie").typeahead("val", "");
-                    vm.movieIds.push(movie.id);
+                    if (vm.movieIds.length < 3) {
+                        $("#movies").append("<li class='list-group-item'>" + movie.name + "<span class='close'>&times;</span> "+"</li>");
+                        $("#movie").typeahead("val", "");
+                        vm.movieIds.push(movie.id);
+                    }
+                    else {
+                        toastr.error("Maximum rental number is 3.");
+                    }
                 });
 
             $.validator.addMethod("validCustomer", function () {
@@ -94,17 +99,25 @@
                     data: vm
                 })
                     .done(function () {
+                        toastr.success("Rentals successfully recorded.")
                         $("#customer").typeahead("val", "");
                         $("#movie").typeahead("val", "");
-                        $("#movies").remove("li")
-                        toastr.success("Rentals successfully recorded.")
+                        $("#movies").empty();
+                        vm = { movieIds: [] };
+                        validator.resetForm();
                 })
                     .fail(function () {
-                        toastr.fail("Something unexpected happened.")
+                        toastr.error("Something unexpected happened.");
                     });
                     return false;
                 }
             });
+
+            $("#movies").on("click", ".close", function () {
+
+                $(this).closest('li').remove();
+            });
+
         });
     </script>
     

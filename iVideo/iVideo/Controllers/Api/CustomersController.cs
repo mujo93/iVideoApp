@@ -22,6 +22,7 @@ namespace iVideo.Controllers.Api
         }
 
         // api/customers
+        [HttpGet]
         public IHttpActionResult GetCustomers(string query=null)
         {
             var customersQuery = _context.Customers.Include(c => c.MembershipType);
@@ -86,6 +87,5 @@ namespace iVideo.Controllers.Api
 
             return Ok();
         }
-
     }
 }
