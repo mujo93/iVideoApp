@@ -13,6 +13,8 @@
                 <th>Customer</th>
                 <th>Membership Name</th>
                 <th>Actions</th>
+                <th>Is Deliquent</th>
+                
             </tr>
         </thead>
         <tbody>
@@ -44,6 +46,14 @@
                         render: function (data) {
                             return `<button class="btn-link js-delete" data-customer-id=${data}>Delete</button>`;
                         }
+                    },
+                    {
+                        data: "isDeliquent",
+                        render: function (data, type, customer) {
+
+                            let checked = data === false ? "" : "checked";
+                            return ` <input type="checkbox" data-customer-id=${customer.id}  class='js-isDeliquent' ${checked} value="${data}">`;
+                        }
                     }
                 ]
             });
@@ -63,6 +73,22 @@
                     }
                 })
 
+            });
+
+            $("#customers").on("click", ".js-isDeliquent", function () {
+                var id = $(this).attr("data-customer-id");
+                var status = $(this).is(':checked');
+
+                $.ajax({
+                    url: `/api/customers/MarkCustomerAsDeliquent?id=${id}&status=${status}`,
+                    method:"PUT",
+                    success: function () {
+                        if (status === true)
+                            toastr.info("Customer has been marked as delinquent.");
+                        else
+                            toastr.info("Customer has been marked as non-delinquent.");
+                    }
+                })
             });
         });
     </script>

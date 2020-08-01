@@ -87,5 +87,18 @@ namespace iVideo.Controllers.Api
 
             return Ok();
         }
+
+        [HttpPut]
+        public IHttpActionResult MarkCustomerAsDeliquent(int id,bool status)
+        {
+            var customerInDb = _context.Customers.SingleOrDefault(c => c.Id==id);
+            if (customerInDb == null)
+                return NotFound();
+            customerInDb.IsDeliquent = status;
+
+            _context.SaveChanges();
+
+            return Ok();
+        }
     }
 }

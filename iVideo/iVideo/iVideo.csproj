@@ -256,6 +256,10 @@
     <Compile Include="Migrations\202007240239552_MakeIdOfRentalTableInt.Designer.cs">
       <DependentUpon>202007240239552_MakeIdOfRentalTableInt.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202007310448360_AddingDeliquentColumnToCustomerTable.cs" />
+    <Compile Include="Migrations\202007310448360_AddingDeliquentColumnToCustomerTable.Designer.cs">
+      <DependentUpon>202007310448360_AddingDeliquentColumnToCustomerTable.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\ApplicationUser.cs" />
     <Compile Include="Models\Rental.cs" />
@@ -576,6 +580,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202007240239552_MakeIdOfRentalTableInt.resx">
       <DependentUpon>202007240239552_MakeIdOfRentalTableInt.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202007310448360_AddingDeliquentColumnToCustomerTable.resx">
+      <DependentUpon>202007310448360_AddingDeliquentColumnToCustomerTable.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

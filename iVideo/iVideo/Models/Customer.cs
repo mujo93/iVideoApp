@@ -23,5 +23,8 @@ namespace iVideo.Models
 
         [Min18YearsIfAMember]
         public DateTime? Birthdate { get; set; }
+
+        [Display(Name="Is Deliquent")]
+        public bool? IsDeliquent { get; set; }
     }
 }

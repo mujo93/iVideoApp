@@ -22,6 +22,10 @@ namespace iVideo.Controllers.Api
         public IHttpActionResult CreateNewRentals(NewRentalDto newRental)
         {
             var customer = _context.Customers.Single(c => c.Id == newRental.CustomerId);
+
+            if (customer.IsDeliquent == true)
+                return BadRequest("Customer is delinquent on payment.");
+
             var movies = _context.Movies.Where(m => newRental.MovieIds.Contains(m.Id));
             foreach(var movie in movies)
             {
