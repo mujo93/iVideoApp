@@ -95,7 +95,6 @@
             }, "Please select a movie.");
 
             $.validator.addMethod("nonDeliquentCustomer", function () {
-                debugger;
                 return vm.customer.isDeliquent === false;
             }, "Customer is deliquent on payment.");
 

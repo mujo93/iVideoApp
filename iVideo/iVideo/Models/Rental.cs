@@ -15,7 +15,10 @@ namespace iVideo.Models
 
         [Required]
         public Customer Customer { get; set; }
+        
         [Required]
         public Movie Movie { get; set; }
+
+        public decimal? Payment { get; set; }
     }
 }

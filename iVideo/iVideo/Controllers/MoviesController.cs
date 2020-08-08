@@ -10,7 +10,7 @@ using System.Web.Mvc;
 
 namespace iVideo.Controllers
 {
-    [Authorize(Roles =RoleName.CanManageMovies)]
+    //[Authorize(Roles =RoleName.CanManageMovies)]
     public class MoviesController : Controller
     {
         // GET: Movies
@@ -20,12 +20,12 @@ namespace iVideo.Controllers
         {
             _context = new ApplicationDbContext();
         }
-        [AllowAnonymous]
+       // [AllowAnonymous]
         public ActionResult Index()
         {
-            if(User.IsInRole("CanManageMovies"))
+           // if(User.IsInRole("CanManageMovies"))
                 return View("List");
-            return View("ReadOnlyList");
+            //return View("ReadOnlyList");
         }
 
         [AllowAnonymous]

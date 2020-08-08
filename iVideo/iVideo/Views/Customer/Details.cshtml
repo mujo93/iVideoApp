@@ -1,12 +1,75 @@
-﻿@model iVideo.Models.Customer 
+﻿@model iVideo.Models.Customer
 @{
     ViewBag.Title = "Details";
 }
 
 <h2>@Model.Name</h2>
-<ul>
-    <li>Membership Type: @Model.MembershipType.Name</li>
-    @if (Model.Birthdate != null)
-    {
-        <li> Birthdate: @Model.Birthdate</li>}
-</ul>
+
+
+        <ul class="customerInfo">
+            <li id="id"></li>
+            <li id="name"></li>
+            <li id="birthdate"></li>
+            <li id="membershipType"></li>
+            <li id="balance"></li>
+        </ul>
+    <form id="customerInf">
+        <div class="row col-md-12">
+            <div class="tt-container">
+                <label for="amountInput">Balance: </label>
+                <input name="amountInput " id="amount" placeholder="Please enter an amount..." data-rule-validAmount="true"/>
+            </div>
+            <input class="submit btn btn-success add-button" type="submit" value="Add">
+        </div>
+    </form>
+
+
+@section scripts{
+    @Scripts.Render("/bundles/jqueryval");
+    <script>
+        function getData() {
+            $.ajax({
+                url: "https://localhost:44397/api/customers/@Model.Id",
+                method: "GET",
+                success: function (data) {
+                    var membershipType = data.membershipType === null ? "None" : data.membershipType;
+                    $('#id').append("ID: " + data.id);
+                    $('#name').append("Name: " + data.name);
+                    $('#birthdate').append("Birthdate: " + data.birthdate.substring(0, 10));
+                    $('#membershipType').append("Membership Type: " + membershipType);
+                    $('#balance').append("Balance: " + data.balance+"$");
+                }
+            });
+        }
+
+        $(document).ready(function () {
+            getData();
+            $("#customerInf").validate({
+                submitHandler: function () {
+                    let id = $("#id").html().substring(4);
+                    let amount = $("#amount").val();
+                    let currentBalance = $("#balance").html().match(/[\d\.]+/)[0];
+                    let newBalance = Number(amount) + Number(currentBalance);
+                    $.ajax({
+                        url: `https://localhost:44397/api/customers/AddBalance?id=${id}&amount=${amount}`,
+                        method: "PUT",
+                    })
+                        .done(function () {
+                            toastr.success("Amount has beenn added the balance successfully.")
+                            $('#balance').html("Balance: $" + newBalance);
+                            $("#amount").val("");
+                        })
+                        .fail(function () {
+                            toastr.error("Something unexpected happened.");
+                        });
+                    return false;
+                }
+            });
+
+            $.validator.addMethod("validAmount", function () {
+                let amount = $("#amount").val();
+                return Number(amount) > 0;
+            }, "The amount cannot be minus");
+        });
+    </script>
+} 

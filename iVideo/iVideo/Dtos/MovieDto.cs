@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Web;
 
@@ -14,5 +15,9 @@ namespace iVideo.Dtos
         public int GenreId { get; set; }
 
         public GenreDto Genre { get; set; }
+
+        [Required]
+        [Range(0,1000)]
+        public decimal Price { get; set; }
     }
 }

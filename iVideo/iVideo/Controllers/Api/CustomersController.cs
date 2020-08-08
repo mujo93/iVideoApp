@@ -100,5 +100,22 @@ namespace iVideo.Controllers.Api
 
             return Ok();
         }
+
+
+        [HttpPut]
+        public IHttpActionResult AddBalanceToCustomer(int id,decimal amount)
+        {
+            var customerInDb = _context.Customers.SingleOrDefault(c => c.Id == id);
+            if (customerInDb == null)
+                return NotFound();
+            if (amount < 0)
+                BadRequest("Amount cannot be minus.");
+            customerInDb.Balance += amount;
+            _context.SaveChanges();
+
+            return Ok();
+        }
+
+
     }
 }

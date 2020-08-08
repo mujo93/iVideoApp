@@ -38,7 +38,6 @@ namespace iVideo.Controllers.Api
             return Ok(movieDto);
         }
 
-        [HttpPost]
         public IHttpActionResult CreateMovie(MovieDto movieDto)
         {
             var movie = Mapper.Map<MovieDto, Movie>(movieDto);
@@ -50,16 +49,25 @@ namespace iVideo.Controllers.Api
 
         }
 
-        [HttpPut]
-        public IHttpActionResult UpdateMovie(int id, MovieDto movieDto)
+        [HttpPost]
+        public IHttpActionResult UpdateMovie(int id,[FromBody]MovieDto movieDto)
         {
             var movieInDb = _context.Movies.SingleOrDefault(m => m.Id == id);
             if (movieInDb == null)
-                return NotFound();
-            Mapper.Map(movieDto, movieInDb);
+            {
+                var movie = Mapper.Map<MovieDto, Movie>(movieDto);
+                _context.Movies.Add(movie);
+                movieDto.Id = movie.Id;
+            }
+            else
+            {
+                Mapper.Map(movieDto, movieInDb);
+                movieDto.Id = movieInDb.Id;
+            }
+
             _context.SaveChanges();
 
-            movieDto.Id = movieInDb.Id;
+            
             return Ok(movieDto);
         }
 

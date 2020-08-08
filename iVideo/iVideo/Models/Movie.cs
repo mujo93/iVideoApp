@@ -36,6 +36,10 @@ namespace iVideo.Models
         [Required]
         public int GenreId { get; set; }
         
-        public byte NumberAvailable { get; set; } 
+        public byte NumberAvailable { get; set; }
+
+        [Required]
+        [Range(0, 1000)]
+        public decimal Price { get; set; }
     }
 }

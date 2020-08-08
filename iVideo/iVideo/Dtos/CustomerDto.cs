@@ -22,5 +22,7 @@ namespace iVideo.Dtos
 
         [Display(Name = "Is Deliquent")]
         public bool IsDeliquent { get; set; }
+
+        public decimal Balance { get; set; }
     }
 }

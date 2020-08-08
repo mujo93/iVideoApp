@@ -260,6 +260,18 @@
     <Compile Include="Migrations\202007310448360_AddingDeliquentColumnToCustomerTable.Designer.cs">
       <DependentUpon>202007310448360_AddingDeliquentColumnToCustomerTable.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202008010106255_AddingPricePropertyToMovie.cs" />
+    <Compile Include="Migrations\202008010106255_AddingPricePropertyToMovie.Designer.cs">
+      <DependentUpon>202008010106255_AddingPricePropertyToMovie.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202008010111298_AddingPaymentPropertyToRental.cs" />
+    <Compile Include="Migrations\202008010111298_AddingPaymentPropertyToRental.Designer.cs">
+      <DependentUpon>202008010111298_AddingPaymentPropertyToRental.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202008010122309_AddingBalancePropertyToCustomer.cs" />
+    <Compile Include="Migrations\202008010122309_AddingBalancePropertyToCustomer.Designer.cs">
+      <DependentUpon>202008010122309_AddingBalancePropertyToCustomer.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\ApplicationUser.cs" />
     <Compile Include="Models\Rental.cs" />
@@ -583,6 +595,15 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202007310448360_AddingDeliquentColumnToCustomerTable.resx">
       <DependentUpon>202007310448360_AddingDeliquentColumnToCustomerTable.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202008010106255_AddingPricePropertyToMovie.resx">
+      <DependentUpon>202008010106255_AddingPricePropertyToMovie.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202008010111298_AddingPaymentPropertyToRental.resx">
+      <DependentUpon>202008010111298_AddingPaymentPropertyToRental.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202008010122309_AddingBalancePropertyToCustomer.resx">
+      <DependentUpon>202008010122309_AddingBalancePropertyToCustomer.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
