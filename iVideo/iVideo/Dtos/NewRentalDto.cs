@@ -9,5 +9,7 @@ namespace iVideo.Dtos
     {
         public int CustomerId { get; set; }
         public List<int> MovieIds { get; set; }
+
+        public decimal Total { get; set; }
     }
 }

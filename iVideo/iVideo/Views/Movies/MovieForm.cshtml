@@ -9,7 +9,7 @@
 else
 { <h2>Edit Movie</h2>}
 
-@using (@Html.BeginForm("Save", "Movies"))
+@using (@Html.BeginForm("Save", "Movies",FormMethod.Post, htmlAttributes: new { id = "MoviesForm" }))
 {
     <div class="form-group">
         @Html.LabelFor(m => m.Movie.Name)
@@ -46,7 +46,6 @@ else
 
 <script>
     $(document).ready(function () {
-        var vm = {}
         $("#btnViewModel").on("click", function () {
             debugger;
         var movieDto = {
@@ -54,20 +53,18 @@ else
             ReleaseDate: $("#@Html.IdFor(m=>m.Movie.ReleaseDate)").val(),
             GenreId: $("#@Html.IdFor(m=>m.Movie.GenreId)").val(),
             NumberInStock: $("#@Html.IdFor(m=>m.Movie.NumberInStock)").val(),
+            NumberAvailable:$("#@Html.IdFor(m=>m.Movie.NumberInStock)").val(),
             Price: $("#@Html.IdFor(m=>m.Movie.Price)").val(),
         }
 
             var id = $("#@Html.IdFor(m=>m.Movie.Id)").val();
-
-            vm = {id }
-
-
             $.ajax({
 
                 url: "https://localhost:44397/api/movies/" + id,
                 data: movieDto,
                 method:"Post"
             }).done(function () {
+                $("#MoviesForm").trigger("reset");
                 toastr.success("Movie has been saved succesfully.");
             }).fail(function () {
                 toastr.error("Something went wrong.")

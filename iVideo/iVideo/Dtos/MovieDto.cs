@@ -14,6 +14,7 @@ namespace iVideo.Dtos
         public int NumberInStock { get; set; }
         public int GenreId { get; set; }
 
+        public int NumberAvailable { get; set; }
         public GenreDto Genre { get; set; }
 
         [Required]

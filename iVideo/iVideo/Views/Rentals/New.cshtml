@@ -17,12 +17,18 @@
     <div class="form-group">
         <label>Movie</label>
         <div class="tt-container">
-            <input id="movie" name="movie" data-rule-atLeastOneMovie="true"  type="text" value="" class="form-control" />
+            <input id="movie" name="movie" data-rule-atLeastOneMovie="true" type="text" value="" class="form-control" />
         </div>
     </div>
     <div class="row">
         <div class="col-md-3- col-sm-3">
             <ul id="movies" class="list-group"></ul>
+        </div>
+    </div>
+    <div class="form-group">
+        <label>Total</label>
+        <div class="tt-container">
+            <input id="total" name="total" disabled type="number" value="" class="form-control" />
         </div>
     </div>
     <button class="btn btn btn-primary">Submit</button>
@@ -33,7 +39,8 @@
     <script>
         $(document).ready(function () {
             var vm = {
-                movieIds: []
+                movieIds: [],
+                Total:0
             };
             var customers = new Bloodhound({
                 datumTokenizer: Bloodhound.tokenizers.obj.whitespace('name'),
@@ -77,9 +84,11 @@
                     source: movies
                 }).on("typeahead:select", function (e, movie) {
                     if (vm.movieIds.length < 3) {
-                        $("#movies").append("<li class='list-group-item' id='" + movie.id+"'>" + movie.name + "<span class='close'>&times;</span> "+"</li>");
+                        $("#movies").append(`<li class='list-group-item' price='${movie.price}' id='${movie.id}'>${movie.name}<span class='close'>&times;</span></li>`);
                         $("#movie").typeahead("val", "");
                         vm.movieIds.push(movie.id);
+                        vm.Total += parseFloat(movie.price);
+                        $("#total").val(vm.Total.toFixed(2));
                     }
                     else {
                         toastr.error("Maximum rental number is 3.");
@@ -110,8 +119,9 @@
                         $("#customer").typeahead("val", "");
                         $("#movie").typeahead("val", "");
                         $("#movies").empty();
+                        $("#total").val("");
                         vm = { movieIds: [] };
-                        validator.resetForm();
+                        //validator.resetForm();
                 })
                     .fail(function () {
                         toastr.error("Something unexpected happened.");
@@ -121,11 +131,14 @@
             });
 
             $("#movies").on("click", ".close", function () {
+                debugger;
                 let movieId = $(this).closest('li').attr("id");
+                let moviePrice = $(this).closest('li').attr("price");
                 let index = vm.movieIds.indexOf(Number(movieId));
                 if (index >= 0) { vm.movieIds.splice(index, 1); }
                 $(this).closest('li').remove();
-
+                vm.Total -= parseFloat(moviePrice);
+                $("#total").val(vm.Total.toFixed(2));
             });
 
         });

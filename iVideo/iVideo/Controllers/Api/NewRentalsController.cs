@@ -23,6 +23,11 @@ namespace iVideo.Controllers.Api
         {
             var customer = _context.Customers.Single(c => c.Id == newRental.CustomerId);
 
+            if (customer.Balance < newRental.Total)
+                return BadRequest("Customer has insufficient balance.");
+
+            customer.Balance -= newRental.Total; 
+
             if (customer.IsDeliquent == true)
                 return BadRequest("Customer is delinquent on payment.");
 
