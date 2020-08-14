@@ -131,7 +131,6 @@
             });
 
             $("#movies").on("click", ".close", function () {
-                debugger;
                 let movieId = $(this).closest('li').attr("id");
                 let moviePrice = $(this).closest('li').attr("price");
                 let index = vm.movieIds.indexOf(Number(movieId));

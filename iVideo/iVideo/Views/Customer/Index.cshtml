@@ -7,29 +7,106 @@
 @Html.ActionLink("New Customer", "New", "Customer", new { @class = "btn btn-primary" })
 <br />
 <br />
-    <table id="customers" class="table table-bordered table-responsive table-hover">
-        <thead>
-            <tr>
-                <th>Customer</th>
-                <th>Membership Name</th>
-                <th>Actions</th>
-                <th>Is Deliquent</th>
-                
-            </tr>
-        </thead>
-        <tbody>
+<table id="customers" class="table table-bordered table-responsive table-hover">
+    <thead>
+        <tr>
+            <th>Customer</th>
+            <th>Membership Name</th>
+            <th>Actions</th>
+            <th>Is Deliquent</th>
 
-        </tbody>
-    </table>
+        </tr>
+    </thead>
+    <tbody>
+    </tbody>
+</table>
+<div class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title" id="exampleModalLabel">Edit Customer</h2>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="customerForm">
+                    <div class="form-group">
+                        <label>Customer Name</label>
+                        <div class="tt-container">
+                            <input id="customerName" name="customerName"
+                                   required type="text" value="" class="form-control" />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Birtdate</label>
+                        <div class="tt-container">
+                            <input id="birthdate" name="birthdate" type="date" value="" class="form-control" />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Membership Type</label>
+                        <div class="tt-container">
+                            <select id="membership" name="membership" value="" class="form-control" />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="tt-container">
+                            <input id="subscribe" name="subscribe" type="checkbox" class="form-control" />
+                            <label for="subscribe"> Subscribed it Newsletter?</label><br>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="tt-container">
+                            <input id="id" name="id" type="hidden" class="form-control" />
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button id="save" type="button" class="btn btn-primary">Save changes</button>
+            </div>
+        </div>
+    </div>
+</div>
 
+<div class="modal fade" id="rentalModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title" id="exampleModalLabel">Edit Customer</h2>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <table id="rentalTable" class="table table-bordered table-responsive table-hover">
+                    <thead>
+                        <tr>
+                            <th>Movie </th>
+                            <th>Date Rented</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody id="rentalTableBody">
+                    </tbody>
+                </table>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
 @section scripts{
-    
+
     <script>
         $(document).ready(function () {
-        var table=$('#customers').DataTable({
+            var table = $('#customers').DataTable({
                 ajax: {
                     url: "/api/customers/",
-                    dataSrc:""
+                    dataSrc: ""
                 },
                 columns: [
                     {
@@ -44,7 +121,9 @@
                     {
                         data: "id",
                         render: function (data) {
-                            return `<button class="btn-link js-delete" data-customer-id=${data}>Delete</button>`;
+                            return `<button class="btn-link js-edit" data-customer-id=${data} data-toggle='modal' data-target='#editModal'>Edit</button>
+                                    <button class="btn-link js-view" data-customer-id=${data}>ViewRentals</button>
+                                    <button class="btn-link js-delete" data-customer-id=${data}>Delete</button>`;
                         }
                     },
                     {
@@ -75,13 +154,114 @@
 
             });
 
+            $("#save").click(function () {
+                let customerDto = {
+                    name: $("#customerName").val(),
+                    birthdate: $("#birthdate").val(),
+                    isSubscribedToNewsletter: $("#subscribe").prop('checked'),
+                    membershipTypeId: $("#membership").children("option:selected").val()
+                }
+                $.ajax({
+
+                    url: "https://localhost:44397/api/customers/" + $("#save").attr("customer-id"),
+                    data: customerDto,
+                    method: "Post"
+                }).done(function () {
+                    $("#customerForm").trigger("reset");
+                    toastr.success("Movie has been saved succesfully.");
+                    $('#editModal').modal('toggle');
+                    location.reload();
+                }).fail(function () {
+                    toastr.error("Something went wrong.")
+                });
+
+            })
+
+            $("#customers").on("click", ".js-edit", function () {
+                $.ajax({
+                    url: "api/membershipTypes/",
+                    method: "GET",
+                    success: function (data) {
+                        $("option").remove('.options');
+                        for (let i = 0; i < data.length; i++) {
+                            addOption(data[i], 'membership', selectedMembershipType)
+                        }
+                    }
+                });
+                let selectedMembershipType;
+                var button = $(this);
+                $.ajax({
+                    url: "api/customers/" + button.attr("data-customer-id"),
+                    method: "GET",
+                    success: function (data) {
+                        selectedMembershipType = data.membershipTypeId;
+                        $("#customerName").val(data.name);
+                        $("#birthdate").val(data.birthdate.substring(0, 10));
+                        $("#membership").val(data.membershipTypeId);
+                        $("#subscribe").prop("checked", data.isSubscribedToNewsletter);
+                        $("#save").attr("customer-id", data.id);
+
+                    }
+                });
+            });
+
+            $("#customers").on("click", ".js-view", function () {
+                debugger;
+                let button = $(this);
+                $("#rentalModal").modal("toggle");
+                $.ajax({
+                    url: "api/rentals/" + button.attr("data-customer-id"),
+                    method: "GET",
+                    success: function (data) {
+                        if (data.length == 0) {
+                            $("#rentalTableBody").append("No rented movie found")
+                        }
+                        else {
+                            $.each(data, function (index, row) {
+                                console.log(data.length);
+                                $('#rentalTable').append("<tr><td>" + row.movie.name + "</td><td>" + row.dateRented +
+                                    "</td><td><button class='btn-link js-return' data-rental-id=" + row.id + ">Return</button></td></tr>");
+
+                            });
+                        }
+                       
+                    }
+                });
+            })
+
+            $("#rentalTable").on("click", ".js-return", function () {
+                var button = $(this);
+                bootbox.confirm("Are you sure to return this movie", function (result) {
+                    if (result) {
+                        $.ajax({
+                            url: "api/rentals/" + button.attr("data-rental-id"),
+                            method: "PUT",
+                            success: function () {
+                                button.parents('tr').first().remove();
+                            }
+                        });
+                    }
+                })
+            })
+
+            $("#rentalModal").on('hide.bs.modal', function () {
+                debugger;
+                $("#rentalTableBody").empty();
+            });
+
+            function addOption(data, selectId) {
+                optionText = data.name;
+                optionValue = data.id;
+                selectId === $(`#${selectId}`).append(`<option class='options' value="${optionValue}"> ${optionText} </option>`);
+            }
+
             $("#customers").on("click", ".js-isDeliquent", function () {
                 var id = $(this).attr("data-customer-id");
                 var status = $(this).is(':checked');
 
                 $.ajax({
                     url: `/api/customers/MarkCustomerAsDeliquent?id=${id}&status=${status}`,
-                    method:"PUT",
+                    method: "PUT",
                     success: function () {
                         if (status === true)
                             toastr.info("Customer has been marked as delinquent.");
@@ -91,10 +271,11 @@
                 })
             });
         });
+
     </script>
-    
-    
-    }
+
+
+}
 
 
 

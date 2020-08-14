@@ -12,6 +12,9 @@ namespace iVideo.App_Start
     {
         public MappingProfile()
         {
+            Mapper.CreateMap<Customer, CustomerEditDto>();
+            Mapper.CreateMap<CustomerEditDto, Customer>()
+                .ForMember(m => m.Id, opt => opt.Ignore());
             Mapper.CreateMap<Customer, CustomerDto>();
             Mapper.CreateMap<CustomerDto, Customer>()
                 .ForMember(m => m.Id, opt => opt.Ignore());

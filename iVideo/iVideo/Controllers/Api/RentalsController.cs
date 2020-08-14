@@ -45,5 +45,18 @@ namespace iVideo.Controllers.Api
 
             return Ok(rentedMovies);
         }
+
+        [HttpGet]
+        public IHttpActionResult GetRentedMovies(int id)
+        {
+            var rentedMovies = _context.Rentals.
+                Include(m => m.Movie).
+                Include(m => m.Customer).
+                Where(m=>m.Customer.Id==id).
+                Where(m => m.DateReturned == null).
+                ToList();
+
+            return Ok(rentedMovies);
+        }
     }
 }
